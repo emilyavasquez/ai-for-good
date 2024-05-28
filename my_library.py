@@ -33,3 +33,17 @@ def naive_bayes(table, evidence_row, target):
   num_1 = cond_probs_product(table,evidence_row,target,target_value) * prior_prob(table, target, target_value)
   neg, pos = compute_probs(num_0,num_1)
   return[neg, pos]
+
+def metrics(zipped_list):
+  predictions, labels = zip(*zipped_list)
+  all_cases = len(predictions)
+  tp = sum(p == 1 and l == 1 for p, l in zipped_list)
+  fn = sum(p == 0 and l == 1 for p, l in zipped_list)
+  fp = sum(p == 1 and l == 0 for p, l in zipped_list)
+  tn = sum(p == 0 and l == 0 for p, l in zipped_list)
+  precision = tp / (tp + fp) if tp + fp != 0 else 0
+  recall = tp / (tp + fn) if tp + fn != 0 else 0
+  f1 = 2 * precision * recall / (precision + recall) if precision + recall != 0 else 0
+  accuracy = (tp + tn) / all_cases
+  metrics_dict = {'Precision': precision, 'Recall': recall, 'F1': f1, 'Accuracy': accuracy}
+  return metrics_dict
